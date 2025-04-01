@@ -547,7 +547,7 @@ if page == pages[5]:
     st.header("Interprétabilité")
     st.subheader("Importances des features pour le modèle HistGradientBoostingRegressor")
 
-    st.image("feature importances.png", use_container_width=True)
+    st.image("streamlit_assets/feature importances.png", use_container_width=True)
 
     st.markdown("""
 Nous pouvons constater ici que la caractéristique la plus importante pour le modèle est
