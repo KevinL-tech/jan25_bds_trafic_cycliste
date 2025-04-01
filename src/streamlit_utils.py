@@ -1,6 +1,9 @@
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier, HistGradientBoostingRegressor
 
 def fixNaN(source_df):
     df = source_df.copy()
@@ -119,3 +122,34 @@ def plotly_map(df):
         hover_name="Nom du compteur",
         width=800,
         height=750)
+
+@st.cache_data
+def load_classification_data():
+    df = pd.read_csv('data/processed/lieu-compteur-classes-one-hot-encoded.csv', index_col=0)
+    
+    df['Comptage horaire'] = df["Comptage horaire"].replace({
+        "0-3": "[00] 0-3", "4-9": "[01] 4-9", "10-18": "[02] 10-18",
+        "19-31": "[03] 19-31", "32-46": "[04] 32-46", "47-64": "[05] 47-64",
+        "65-86": "[06] 65-86", "87-115": "[07] 87-115", "116-155": "[08] 116-155",
+        "156-230": "[09] 156-230", "231-450": "[10] 231-450", "451+": "[11] 451+",
+    })
+
+    return df
+
+@st.cache_data
+def load_regression_data():
+    df_reg = pd.read_csv('data/processed/lieu-compteur-one-hot-encoded.csv', index_col=0)
+    df_reg["Comptage horaire"] = np.log1p(df_reg["Comptage horaire"])
+    return df_reg
+
+@st.cache_resource
+def train_classification_model(X, y, params):
+    model = RandomForestClassifier(**params)
+    model.fit(X, y)
+    return model
+
+@st.cache_resource
+def train_regression_model(X, y, params):
+    model = HistGradientBoostingRegressor(**params)
+    model.fit(X, y)
+    return model

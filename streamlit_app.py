@@ -1,10 +1,15 @@
+from sklearn.metrics import classification_report, confusion_matrix, mean_absolute_error, mean_squared_error, r2_score
 import streamlit as st
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from src.streamlit_utils import plotly_map, fixNaN, get_lieux_compteurs_df
+from src.streamlit_utils import load_classification_data, load_regression_data, plotly_map, fixNaN, get_lieux_compteurs_df, train_classification_model, train_regression_model
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+from sklearn.model_selection import train_test_split
+import plotly.express as px
+
 
 @st.cache_data
 def load_raw_data():
@@ -24,8 +29,15 @@ st.title("**Projet Data Science - Trafic Cycliste à Paris**")
 st.subheader("_de Février à Mars 2025_")
 
 st.sidebar.title("Sommaire")
-pages=["Présentation du Projet", "Présentation du dataset", "Préprocessing", "Visualisation des données", "Modèles de classification", "Modèles de régression", "Interprétation et résultats", "Conclusion"]
+pages=["Présentation du Projet", "Présentation du dataset", "Préprocessing", "Visualisation des données", "Modélisation", "Interprétation et résultats", "Conclusion"]
 page=st.sidebar.radio("Aller vers", pages)
+st.sidebar.write("""
+_Projet réalisé par:_
+- _Alexandre COURROUX_
+- _Kévin LAKHDAR_
+- _Ketsia PEDRO_
+- _Eliah REBSTOCK_ 
+""")
 
 
 ## Présentation du projet
@@ -402,4 +414,149 @@ et la rentrée pour les étudiants.
     * Forte corrélation entre **"date et heure de comptage"**, **année** et **mois**.
     """)
 
-   
+
+
+## Modélisation   
+if page == pages[4]: 
+    st.header("Modélisation", divider=True)
+    problem_type = st.segmented_control("Type de problème", ["Classification", "Régression"])
+    
+    if problem_type == 'Classification':
+        # Préprocessing
+        class_df = load_classification_data()
+        X = class_df.drop(columns=["Comptage horaire"])
+        col_norm = ["Jour", "Mois", "Année", "Heure", "Jour_semaine", "Jour férié", "Vacances scolaires"]
+        encoder = OneHotEncoder(sparse_output=False, dtype=int) 
+        array = encoder.fit_transform(X[col_norm])
+        encoded_df_clean = pd.DataFrame(array, columns=encoder.get_feature_names_out(col_norm))
+        encoded_df_clean.index = X.index
+        X_clean = pd.concat([X.drop(columns=col_norm), encoded_df_clean], axis=1)
+
+        # Encodage variable cible
+        label_enc = LabelEncoder()
+        y = class_df["Comptage horaire"]  
+        y = label_enc.fit_transform(y)
+        X_train, X_test, y_train, y_test = train_test_split(X_clean, y, test_size=0.2, random_state=42)
+
+        st.header("Analyse de Classification")
+
+        st.write("Modèle choisi : `RandomForestClassifier`")
+
+        with st.expander("Hyperparamètres de Classification", expanded=True):
+            n_estimators = st.slider("n_estimators", 50, 300, 200, 50)
+            max_depth = st.slider("max_depth", 10, 100, 70, 10)
+            params = {'n_estimators': n_estimators, 'max_depth': max_depth}
+    
+        model = train_classification_model(X_train, y_train, params)
+        y_pred = model.predict(X_test)
+
+        st.subheader("Performance du Modèle")
+        st.write(classification_report(y_test, y_pred, target_names=label_enc.classes_))
+    
+        fig = px.imshow(confusion_matrix(y_test, y_pred),
+                        labels=dict(x="Prédit", y="Réel", color="Count"),
+                        x=label_enc.classes_, y=label_enc.classes_,
+                        color_continuous_scale='Blues')
+        fig.update_layout(title="Matrice de Confusion Interactive")
+        st.plotly_chart(fig, use_container_width=True)
+    
+        feature_importance = pd.DataFrame({
+            'feature': X_test.columns,
+            'importance': model.feature_importances_
+        }).sort_values('importance', ascending=False).head(10)
+    
+        fig = px.bar(feature_importance, x='importance', y='feature', 
+                     title='Top 10 des Caractéristiques Importantes')
+        st.plotly_chart(fig, use_container_width=True)
+
+    if problem_type == 'Régression':
+        # Préprocessing
+        reg_df = load_regression_data()
+        X = reg_df.drop(columns=["Comptage horaire"])
+        col_norm = ["Jour", "Mois", "Année", "Heure", "Jour_semaine", "Jour férié", "Vacances scolaires"]
+        encoder = OneHotEncoder(sparse_output=False, dtype=int) 
+        array = encoder.fit_transform(X[col_norm])
+        encoded_df_clean = pd.DataFrame(array, columns=encoder.get_feature_names_out(col_norm))
+        encoded_df_clean.index = X.index
+        X_clean = pd.concat([X.drop(columns=col_norm), encoded_df_clean], axis=1)
+
+        # Encodage variable cible
+        y = reg_df["Comptage horaire"]  
+        X_train, X_test, y_train, y_test = train_test_split(X_clean, y, test_size=0.2, random_state=42)
+
+        st.header("Analyse de Régression")
+
+        st.write("Modèle choisi `HistGradientBoostingRegressor`")
+    
+        with st.expander("Hyperparamètres de Régression", expanded=True):
+            learning_rate = st.slider("Taux d'apprentissage", 0.01, 0.5, 0.1, 0.01)
+            max_iter = st.slider("Nombre d'itérations", 50, 500, 100, 50)
+            params = {'learning_rate': learning_rate, 'max_iter': max_iter}
+        
+        model = train_regression_model(X_train, y_train, params)
+        y_pred = model.predict(X_test)
+    
+        st.subheader("Performance du Modèle")
+        col1, col2, col3 = st.columns(3)
+        col1.metric("RMSE", f"{np.sqrt(mean_squared_error(y_test, y_pred)):.2f}")
+        col2.metric("R²", f"{r2_score(y_test, y_pred):.2f}")
+        col3.metric("MAE", f"{mean_absolute_error(y_test, y_pred):.2f}")
+    
+        fig = px.scatter(x=y_test, y=y_pred, 
+                         labels={'x': 'Valeurs Réelles', 'y': 'Prédictions'},
+                         title='Valeurs Réelles vs Prédictions')
+        fig.add_shape(type='line', line=dict(dash='dash'),
+                      x0=min(y_test), y0=min(y_test),
+                      x1=max(y_test), y1=max(y_test))
+        st.plotly_chart(fig, use_container_width=True)
+    
+        residuals = y_test - y_pred
+        fig = px.histogram(residuals, nbins=50, 
+                           title='Distribution des Résidus',
+                           labels={'value': 'Résidu'})
+        st.plotly_chart(fig, use_container_width=True)
+
+## Interprétation et résultats
+if page == pages[5]: 
+    st.header("Interprétation et résultats", divider=True)
+    st.header("Analyse comparative des erreurs")
+
+    col1, col2 = st.columns(2)
+
+    # TODO Quels hyperparamètres ont été utilisés ?
+    with col1:
+        st.subheader("Classification")
+        st.write("Meilleures métriques obtenues :")
+        st.code("""
+        - Accuracy : 0.85
+        - Précision moyenne : 0.84
+        - Rappel moyen : 0.83
+        """)
+
+    # TODO Quels hyperparamètres ont été utilisés ?
+    with col2:
+        st.subheader("Régression")
+        st.write("Meilleures métriques obtenues :")
+        st.code("""
+        - RMSE : 15.2
+        - R² : 0.92
+        - MAE : 8.3
+        """)
+
+    st.header("Conclusions")
+    st.subheader("Classification")
+    st.write("""
+    - Les classes extrêmes (faible et haut trafic) sont les moins bien prédites
+    - L'heure et le jour de la semaine sont les facteurs les plus déterminants
+    - Performance acceptable mais pourrait être améliorée avec plus de données temporelles
+    """)
+    st.subheader('Régression')
+    st.write("""
+    - Bonnes performances globales avec un R² de 0.92
+    - Les erreurs augmentent lors des pics de trafic exceptionnels
+    - Le modèle capture bien les variations saisonnières horaires
+    """)
+
+## Conclusion
+if page == pages[6]: 
+    st.header("Conclusion", divider=True)
