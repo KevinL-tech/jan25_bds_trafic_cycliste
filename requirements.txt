@@ -208,7 +208,7 @@ soupsieve=2.5=py312hca03da5_0
 sqlite=3.45.3=h80987f9_0
 stack_data=0.2.0=pyhd3eb1b0_0
 statsmodels=0.14.4=py312h80987f9_0
-streamlit=1.43.2=pypi_0
+streamlit=1.44.0=pypi_0
 tenacity=9.0.0=py312hca03da5_0
 tensorboard=2.17.0=py312hca03da5_0
 tensorboard-data-server=0.7.0=py312ha6e5c4f_1
