@@ -562,32 +562,32 @@ if page == pages[5]:
 ## Conclusion
 if page == pages[6]: 
     st.header("Conclusion", divider=True)
+
+    st.header("Approches testées")
+
+    st.subheader("Régression (prédiction exacte)")
     st.markdown("""
-
-    ## Approches testées
-
-    ### Régression (prédiction exacte)
-        
     - **Modèles les plus performants** : ceux basés sur les arbres.
     - **Précision** : marge d'erreur moyenne de **21 vélos par heure**.
     - **Avantages** : meilleure prise en compte des heures de pointe et différences semaine/weekend>
+    """)
 
-    ### Classification par intervalles
+    st.subheader("Classification par intervalles")
+    st.markdown("- **Moins efficace** en raison de confusions entre classes voisines.")
 
-    - **Moins efficace** en raison de confusions entre classes voisines.
+    st.divider()
 
-    ---
-
+    st.markdown("""
     L'objectif du projet est de prédire le nombre de vélos passant à un point précis de Paris à une heure donnée de manière assez précise.
 
     **La modélisation par régression est plus efficace** et peut aider la mairie de Paris à **optimiser les aménagements cyclables prioritaires**.
+    """)
 
-    ## Pistes d'amélioration
-
+    st.header("Pistes d'amélioration")
+    st.markdown("""
     - Meilleure gestion des **afflux inhabituels** de vélos
     - Ajout de **variables supplémentaires** (météo, événements, démographie)
     - Intégration de **données historiques** (années antérieures à 2023)
     - Optimisation pour gérer la **haute volumétrie** des données (1,8 million d'observations)
     - Correction des **prédictions impossibles** dans le cas de la régression (valeurs négatives)
-
-""")
+    """)
