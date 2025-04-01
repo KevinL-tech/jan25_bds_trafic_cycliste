@@ -26,7 +26,7 @@ st.image("streamlit_assets/banniere6.jpeg", use_container_width=True)
 
 #Titres
 st.title("**Projet Data Science - Trafic Cycliste à Paris**")
-st.subheader("_de Février à Mars 2025_")
+st.subheader("_Données de Janvier 2023 à Février 2025_")
 
 st.sidebar.title("Sommaire")
 pages=["Présentation du Projet", "Présentation du dataset", "Préprocessing", "Visualisation des données", "Modélisation", "Interprétation et résultats", "Conclusion"]
