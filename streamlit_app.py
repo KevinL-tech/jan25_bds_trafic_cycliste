@@ -544,6 +544,18 @@ if page == pages[5]:
         - MAE : 8.3
         """)
 
+    st.header("Interprétabilité")
+    st.subheader("Importances des features pour le modèle HistGradientBoostingRegressor")
+
+    st.image("feature importances.png", use_container_width=True)
+
+    st.markdown("""
+Nous pouvons constater ici que la caractéristique la plus importante pour le modèle est
+l’heure et plus largement tout ce qui se rapporte à la date (heure, mois, jour de la semaine
+et année). Cela reste cohérent avec l’objectif fixé qui est de prédire le nombre de vélos sur
+un compteur à une heure précise.
+""")
+
     st.header("Conclusions")
     st.subheader("Classification")
     st.write("""
