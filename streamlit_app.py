@@ -557,14 +557,18 @@ un compteur à une heure précise.
 """)
 
     st.header("Conclusions")
+
     st.subheader("Classification")
+    st.image("streamlit_assets/erreurs_classes.png", use_container_width=True)
     st.write("""
     - Les classes extrêmes (faible et haut trafic) sont les mieux prédites.
     - Les classes intermédiaires sont moins biens prédites à cause d'erreurs de classement entre classes voisines.
     - L'heure et le jour de la semaine sont les facteurs les plus déterminants.
     - Performance acceptable mais pourrait être améliorée avec plus de données temporelles.
     """)
+
     st.subheader('Régression')
+    st.image("streamlit_assets/scores_r2.png", use_container_width=True)
     st.write("""
     - Bonnes performances globales avec un R² de 0.92.
     - Les erreurs augmentent lors des pics de trafic exceptionnels.
