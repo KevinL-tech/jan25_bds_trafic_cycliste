@@ -165,9 +165,9 @@ La variable cible de notre modèle est donc le comptage horaire, un indicateur c
 Le dataset se distingue par sa précision horaire et sa couverture géographique dense, ce qui permet d’identifier des tendances temporelles comme les variations quotidiennes ou saisonnières du trafic cycliste.  
 
 Cependant, il ne contient pas d’informations contextuelles telles que :
-- La météo  
-- La présence d’événements particuliers (manifestations, grèves, festivals)  
-- Ou des données sociodémographiques comme la densité de population par zone  
+- La météo 
+- La présence d’événements particuliers (manifestations, grèves, festivals) 
+- Ou des données sociodémographiques comme la densité de population par zone 
 
 Cette absence limite la profondeur des analyses prédictives que l’on peut mener.
 """)
@@ -178,11 +178,11 @@ if page == pages[2]:
     st.header("1. Suppression des NaN")
 
     st.markdown("""
-    Certaines variables de métadonnées des compteurs ("Identifiant du compteur", "Coordonnées géographiques", ...) ont des valeurs NaN (environ 3.4% sur le dataset)
+    Certaines variables de métadonnées des compteurs ("Identifiant du compteur", "Coordonnées géographiques", ...) ont des valeurs NaN (environ 3.4% sur le dataset).
 
-    Plusieurs compteurs du dataset correspondaient en réalité à un même emplacement, ce qui a permis de réduire les NaN en les renommant et fusionnant. 
+    Plusieurs compteurs du dataset correspondent en réalité à un même emplacement, ce qui a permis de réduire les NaN en les renommant et fusionnant. 
 
-    Les derniers NaN provenaient de deux compteurs atypiques, finalement supprimés pour obtenir un dataset complet et sans valeurs manquantes
+    Les derniers NaN provenaient de deux compteurs atypiques, finalement supprimés pour obtenir un dataset complet et sans valeurs manquantes.
     """) 
         
     st.header("2. Conversion Date au format datetime") 
@@ -216,7 +216,7 @@ if page == pages[2]:
     st.header("4. Normalisation des données")
 
     st.markdown("""
-    Nous avons appliqué deux types de **normalisation** sur les colonnes temporelles et contextuelles, notamment pour réduire l'impact des valeurs extrêmes de Comptage horaire sur les prédictions de notre modèle,  la variable Comptage horaire ne suivant pas une loi normale :
+    Nous avons appliqué deux types de **normalisation** sur les colonnes temporelles et contextuelles, notamment pour réduire l'impact des valeurs extrêmes de Comptage horaire sur les prédictions de notre modèle, la variable Comptage horaire ne suivant pas une loi normale :
 
     1. **Standardisation** : centre les données autour de 0 avec une variance de 1.
     2. **Min-Max Scaling** : transforme les valeurs dans une plage définie, ici entre 0 et 1.
@@ -260,7 +260,7 @@ if page == pages[3]:
 
     st.header("Visualisation des données", divider=True)
     st.header("I. Cartographie")
-    st.markdown("Carte de la ville de Paris représentant les positions des différents compteurs du dataset. La taille de chaque point correspond au comptage horaire total.")
+    st.markdown("Carte de la ville de Paris représentant les positions des différents compteurs du dataset. La taille de chaque point correspond au comptage horaire total sur la période 2023-2024.")
 
     st.plotly_chart(plotly_map(load_raw_data()))
 
@@ -271,10 +271,9 @@ if page == pages[3]:
     - Est-Ouest (avenue de la Grande Armée et avenue des Champs-Élysées). 
     - Les quais de la Seine ainsi que le boulevard périphérique Sud (le long de la voie de tram T3a) sont aussi couverts. 
                 
-    Boulevard périphérique nord et les 17 et 18e arrondissements n'ont pas de compteurs. 
+    Le boulevard périphérique nord et les 17 et 18e arrondissements n'ont pas de compteurs.
     
-    Compteurs "centraux" ont plus de comptage que ceux en périphérie de Paris : 
-    Corrélation entre la localisation du compteur et le comptage horaire ?""")
+    Les compteurs "centraux" ont plus de passages que ceux en périphérie de Paris : il y a donc une corrélation entre la localisation du compteur et le comptage horaire.""")
 
     st.header("II. Évolution temporelle")
 
@@ -311,7 +310,7 @@ et la rentrée pour les étudiants.
     st.markdown("""
     On constate une baisse du comptage en **hiver** (janvier et décembre) et en **été** (au mois d'août).
 
-    Cela est peut-être dû aux **vacances**, à certains **événements** (JO de Paris en août) et à la **météo** (il fait plus froid en hiver, ce qui n'encourage pas la pratique cycliste).""")
+    Cela est peut-être dû aux **vacances**, à certains **événements** (JO de Paris en août en 2024) et à la **météo** (il fait plus froid en hiver, ce qui n'encourage pas la pratique cycliste).""")
 
     st.subheader("""c. Comportement selon les jours""")
     
@@ -390,7 +389,7 @@ et la rentrée pour les étudiants.
     st.pyplot(fig)
 
     st.markdown("""
-    On peut se rendre compte que la distribution n'est pas normale.
+    On peut se rendre compte que la distribution de la variable n'est pas normale.
     Ceci peut s'expliquer par le fait que les données soient concentrées vers 0.
     """)
 
@@ -412,8 +411,8 @@ et la rentrée pour les étudiants.
 
     st.markdown("""
     * Le **comptage horaire** est légèrement corrélé au **nom du compteur** et à **l'heure de la journée**.
-    * Corrélation forte entre les variables **jour_semaine** et **week-end** (variables potentiellement redondantes).
-    * Forte corrélation entre **"date et heure de comptage"**, **année** et **mois**.
+    * Corrélation forte entre les variables **jour_semaine** et **week-end** (variables redondantes).
+    * Forte corrélation entre **"date et heure de comptage"**, **année** et **mois**, ce qui semble logique, l'année et le mois étant dérivés de la date.
     """)
 
 
@@ -548,15 +547,16 @@ if page == pages[5]:
     st.header("Conclusions")
     st.subheader("Classification")
     st.write("""
-    - Les classes extrêmes (faible et haut trafic) sont les moins bien prédites
-    - L'heure et le jour de la semaine sont les facteurs les plus déterminants
-    - Performance acceptable mais pourrait être améliorée avec plus de données temporelles
+    - Les classes extrêmes (faible et haut trafic) sont les mieux prédites.
+    - Les classes intermédiaires sont moins biens prédites à cause d'erreurs de classement entre classes voisines.
+    - L'heure et le jour de la semaine sont les facteurs les plus déterminants.
+    - Performance acceptable mais pourrait être améliorée avec plus de données temporelles.
     """)
     st.subheader('Régression')
     st.write("""
-    - Bonnes performances globales avec un R² de 0.92
-    - Les erreurs augmentent lors des pics de trafic exceptionnels
-    - Le modèle capture bien les variations saisonnières horaires
+    - Bonnes performances globales avec un R² de 0.92.
+    - Les erreurs augmentent lors des pics de trafic exceptionnels.
+    - Le modèle capture bien les variations saisonnières horaires.
     """)
 
 ## Conclusion
