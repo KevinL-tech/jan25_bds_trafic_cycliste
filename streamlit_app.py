@@ -446,6 +446,8 @@ if page == pages[4]:
 
         st.header("Analyse de Classification")
         st.write("**Modèle choisi** : `RandomForestClassifier`")
+        st.write("Nous avons divisé comptage horaire selon ces intervalles :")
+        st.write(sorted(class_df["Comptage horaire"].unique()))
 
         with st.expander("Hyperparamètres de Classification", expanded=True):
             n_estimators = st.slider("n_estimators", 50, 200, 200, 50)
@@ -608,7 +610,6 @@ un compteur à une heure précise.
     """)
 
     st.subheader('Régression')
-    st.image("streamlit_assets/scores_r2.png", use_container_width=True)
     st.write("""
     - Bonnes performances globales avec un R² de 0.96.
     - Les erreurs augmentent lors des pics de trafic exceptionnels.
