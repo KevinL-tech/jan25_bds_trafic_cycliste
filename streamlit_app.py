@@ -518,8 +518,8 @@ if page == pages[4]:
         """)
     
         with st.expander("Hyperparamètres de Régression", expanded=True):
-            learning_rate = st.slider("Taux d'apprentissage", 0.1, 0.5, 0.1, 0.1)
-            max_iter = st.slider("Nombre d'itérations", 50, 500, 100, 50)
+            learning_rate = st.slider("Taux d'apprentissage", 0.1, 0.5, 0.5, 0.1)
+            max_iter = st.slider("Nombre d'itérations", 50, 500, 500, 50)
             params = {'learning_rate': learning_rate, 'max_iter': max_iter}
 
             model_filename = MODELS_DIR / f"hgb_regressor_{learning_rate}_{max_iter}.pkl"
