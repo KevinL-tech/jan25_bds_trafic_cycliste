@@ -42,7 +42,7 @@ _Projet réalisé par:_
 - _Ketsia PEDRO_
 - _Eliah REBSTOCK_ 
 
-_Bootcamp Machine Learning Engineer Janvier 2025_
+_Bootcamp Machine Learning Engineer Décembre 2024_
 """)
 
 
