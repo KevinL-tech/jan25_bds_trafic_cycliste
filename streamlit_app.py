@@ -567,24 +567,22 @@ if page == pages[5]:
 
     col1, col2 = st.columns(2)
 
-    # TODO Quels hyperparamètres ont été utilisés ?
     with col1:
         st.subheader("Classification")
-        st.write("Meilleures métriques obtenues :")
+        st.write("Meilleures métriques obtenues (`n_estimators=200, max_depth=100`) :")
         st.code("""
-        - Accuracy : 0.85
-        - Précision moyenne : 0.84
-        - Rappel moyen : 0.83
+        - Accuracy : 0.55
+        - Précision moyenne : 0.56
+        - Rappel moyen : 0.57
+        - f1-score moyen : 0.56
         """)
 
-    # TODO Quels hyperparamètres ont été utilisés ?
     with col2:
         st.subheader("Régression")
-        st.write("Meilleures métriques obtenues :")
+        st.write("Meilleures métriques obtenues (`learning_rate=0.1, max_iter=5000`):")
         st.code("""
-        - RMSE : 15.2
-        - R² : 0.92
-        - MAE : 8.3
+        - RMSE : 21.99
+        - R² : 0.96
         """)
 
     st.header("Interprétabilité")
@@ -607,13 +605,12 @@ un compteur à une heure précise.
     - Les classes extrêmes (faible et haut trafic) sont les mieux prédites.
     - Les classes intermédiaires sont moins biens prédites à cause d'erreurs de classement entre classes voisines.
     - L'heure et le jour de la semaine sont les facteurs les plus déterminants.
-    - Performance acceptable mais pourrait être améliorée avec plus de données temporelles.
     """)
 
     st.subheader('Régression')
     st.image("streamlit_assets/scores_r2.png", use_container_width=True)
     st.write("""
-    - Bonnes performances globales avec un R² de 0.92.
+    - Bonnes performances globales avec un R² de 0.96.
     - Les erreurs augmentent lors des pics de trafic exceptionnels.
     - Le modèle capture bien les variations saisonnières horaires.
     """)
@@ -631,7 +628,7 @@ if page == pages[6]:
 
     - Collecte et traitement de **1,8 million d'observations** (2023-2025)
     - Analyse exploratoire approfondie des tendances du trafic cycliste.
-    - Développement de deux approches complémentaires :
+    - Développement de deux approches :
         - **Modélisation par régression** pour une prédiction précise du nombre de vélos.
         - **Classification** pour catégoriser l'intensité du trafic.
     - Création d'une application interactive pour visualiser les résultats.
@@ -655,10 +652,10 @@ if page == pages[6]:
         st.subheader("⚙️ Performance des Modèles")
         st.markdown("""
         - **Régression** (meilleure performance):
-            - Précision moyenne : **±8 vélos/heure**
+            - Précision moyenne : **±10 vélos/heure**
             - Capacité à capturer les tendances saisonnières
         - **Classification** :
-            - Précision globale de **85%**
+            - Précision globale de **56%**
             - Bonne détection des pics et creux de trafic
         """)
 
