@@ -139,7 +139,6 @@ def load_classification_data():
 @st.cache_data
 def load_regression_data():
     df_reg = pd.read_csv('data/processed/lieu-compteur-one-hot-encoded.csv', index_col=0)
-    df_reg["Comptage horaire"] = np.log1p(df_reg["Comptage horaire"])
     return df_reg
 
 @st.cache_resource
