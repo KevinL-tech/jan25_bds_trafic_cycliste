@@ -5,7 +5,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 import joblib
-import os
 from pathlib import Path
 
 from src.streamlit_utils import load_classification_data, load_regression_data, plotly_map, fixNaN, get_lieux_compteurs_df, train_classification_model, train_regression_model
@@ -449,9 +448,9 @@ if page == pages[4]:
         st.write("**Modèle choisi** : `RandomForestClassifier`")
 
         with st.expander("Hyperparamètres de Classification", expanded=True):
-            n_estimators = st.slider("n_estimators", 50, 300, 200, 50)
+            n_estimators = st.slider("n_estimators", 50, 200, 200, 50)
             max_depth = st.slider("max_depth", 10, 100, 70, 10)
-            params = {'n_estimators': n_estimators, 'max_depth': max_depth}
+            params = {'n_estimators': n_estimators, 'max_depth': max_depth, 'criterion': 'gini', 'min_samples_split':15, 'min_samples_leaf':2, 'max_features':'sqrt'}
             
             # On génère un nom de fichier unique qui est basé sur les hyperparamètres
             model_filename = MODELS_DIR / f"rf_classifier_{n_estimators}_{max_depth}.pkl"
@@ -460,23 +459,24 @@ if page == pages[4]:
             if model_filename.exists():
                 st.info("Chargement du modèle pré-entraîné...")
                 model = joblib.load(model_filename)
+                st.success("Modèle chargé.")
             else:
                 st.info("Entraînement du modèle... (peut prendre quelques minutes)")
                 model = train_classification_model(X_train, y_train, params)
                 joblib.dump(model, model_filename)
-                st.success("Modèle entraîné et sauvegardé pour une utilisation future!")
+                st.success("Modèle entraîné et sauvegardé pour une utilisation future !")
         
         # Prédictions et évaluation
         y_pred = model.predict(X_test)
 
         st.subheader("Performance du Modèle")
-        st.write(classification_report(y_test, y_pred, target_names=label_enc.classes_))
+        st.dataframe(pd.DataFrame(classification_report(y_test, y_pred, target_names=label_enc.classes_, output_dict=True)).transpose())
     
         fig = px.imshow(confusion_matrix(y_test, y_pred),
                         labels=dict(x="Prédit", y="Réel", color="Count"),
                         x=label_enc.classes_, y=label_enc.classes_,
                         color_continuous_scale='Blues')
-        fig.update_layout(title="Matrice de Confusion Interactive")
+        fig.update_layout(title="Matrice de confusion")
         st.plotly_chart(fig, use_container_width=True)
     
         feature_importance = pd.DataFrame({
@@ -485,7 +485,7 @@ if page == pages[4]:
         }).sort_values('importance', ascending=False).head(10)
     
         fig = px.bar(feature_importance, x='importance', y='feature', 
-                     title='Top 10 des Caractéristiques Importantes')
+                     title='Top 10 des caractéristiques importantes')
         st.plotly_chart(fig, use_container_width=True)
 
     if problem_type == 'Régression':
@@ -516,11 +516,23 @@ if page == pages[4]:
         """)
     
         with st.expander("Hyperparamètres de Régression", expanded=True):
-            learning_rate = st.slider("Taux d'apprentissage", 0.01, 0.5, 0.1, 0.01)
+            learning_rate = st.slider("Taux d'apprentissage", 0.1, 0.5, 0.1, 0.1)
             max_iter = st.slider("Nombre d'itérations", 50, 500, 100, 50)
             params = {'learning_rate': learning_rate, 'max_iter': max_iter}
-        
-        model = train_regression_model(X_train, y_train, params)
+
+            model_filename = MODELS_DIR / f"hgb_regressor_{learning_rate}_{max_iter}.pkl"
+
+            # Ici on vérifie si le modèle est déjà entraîné
+            if model_filename.exists():
+                st.info("Chargement du modèle pré-entraîné...")
+                model = joblib.load(model_filename)
+                st.success("Modèle chargé.")
+            else:
+                st.info("Entraînement du modèle... (peut prendre quelques minutes)")
+                model = train_regression_model(X_train, y_train, params)
+                joblib.dump(model, model_filename)
+                st.success("Modèle entraîné et sauvegardé pour une utilisation future !")
+
         y_pred = model.predict(X_test)
         
         # Conversion inverse des prédictions (expm1 pour inverser log1p)
