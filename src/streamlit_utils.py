@@ -125,7 +125,7 @@ def plotly_map(df):
 
 @st.cache_data
 def load_classification_data():
-    df = pd.read_csv('data/processed/lieu-compteur-classes-one-hot-encoded.csv', index_col=0)
+    df = pd.read_csv(r"C:\Users\kevin_2crsr2j\Desktop\VELO DST\dataset_classification.csv", index_col=0)
     
     df['Comptage horaire'] = df["Comptage horaire"].replace({
         "0-3": "[00] 0-3", "4-9": "[01] 4-9", "10-18": "[02] 10-18",
@@ -138,7 +138,7 @@ def load_classification_data():
 
 @st.cache_data
 def load_regression_data():
-    df_reg = pd.read_csv('data/processed/lieu-compteur-one-hot-encoded.csv', index_col=0)
+    df_reg = pd.read_csv(r"C:\Users\kevin_2crsr2j\Desktop\VELO DST\lieu-compteur-one-hot-encoded.csv", index_col=0)
     return df_reg
 
 @st.cache_resource
