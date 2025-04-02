@@ -263,7 +263,46 @@ if page == pages[3]:
     raw_data = load_raw_data()
 
     st.header("Visualisation des données", divider=True)
-    st.header("I. Cartographie")
+
+    st.header("I. Distribution de la variable cible")
+    st.subheader('Boxplot global de la variable comptage horaire')
+
+    fig = plt.figure(figsize=(10, 5))
+    sns.boxplot(raw_data, x='Comptage horaire')
+    st.pyplot(fig)
+
+    st.markdown('On remarque la présence de nombreuses valeurs extrêmes, au sens statistique. 75% des valeurs sont inférieures à 95 comptages par heure et 25% des valeurs sont inférieures à 11.')
+
+    st.subheader('Histogramme de la variable comptage horaire')
+
+    fig = plt.figure(figsize=(10, 5))
+    sns.histplot(raw_data, x='Comptage horaire', kde=True)
+    plt.xlim(0, 2000)
+    st.pyplot(fig)
+
+    st.markdown("L'histogramme confirme le nombre élevé de valeurs inférieures à 100.")
+
+    st.subheader("QQ-Plot de la variable comptage horaire")
+    import statsmodels.api as sm
+
+    fig = sm.qqplot(df["Comptage horaire"], line = "r")
+    plt.title("QQ-Plot de Comptage horaire")
+    st.pyplot(fig)
+
+    st.markdown("""
+    On peut se rendre compte que la distribution de la variable n'est pas normale.
+    Ceci peut s'expliquer par le fait que les données soient concentrées vers 0.
+    """)
+
+    st.subheader('Boxplot de la variable comptage horaire en fonction du lieu de comptage') 
+
+    agg_data = get_lieux_compteurs_df(raw_data)
+    site = st.selectbox("Nom du site de comptage", list(agg_data['Nom du site de comptage'].unique()))
+    fig = plt.figure(figsize=(10, 5))
+    sns.boxplot(agg_data.loc[agg_data['Nom du site de comptage'] == site], x='Comptage horaire')
+    plt.title(site)
+    st.pyplot(fig)
+    st.header("II. Cartographie")
     st.markdown("Carte de la ville de Paris représentant les positions des différents compteurs du dataset. La taille de chaque point correspond au comptage horaire total sur la période 2023-2024.")
 
     st.plotly_chart(plotly_map(load_raw_data()))
@@ -279,7 +318,7 @@ if page == pages[3]:
     
     Les compteurs "centraux" ont plus de passages que ceux en périphérie de Paris : il y a donc une corrélation entre la localisation du compteur et le comptage horaire.""")
 
-    st.header("II. Évolution temporelle")
+    st.header("III. Évolution temporelle")
 
     st.subheader("""a. Évolution globale du trafic""")
     fig = plt.figure(figsize=(12, 5))
@@ -366,46 +405,6 @@ et la rentrée pour les étudiants.
 
     **Volume de passages** relativement **régulier** entre **11h et 20h** le **week-end**.
     """)
-
-    st.header("III. Distribution de la variable cible")
-    st.subheader('Boxplot global de la variable comptage horaire')
-
-    fig = plt.figure(figsize=(10, 5))
-    sns.boxplot(raw_data, x='Comptage horaire')
-    st.pyplot(fig)
-
-    st.markdown('On remarque la présence de nombreuses valeurs extrêmes, au sens statistique. 75% des valeurs sont inférieures à 95 comptages par heure et 25% des valeurs sont inférieures à 11.')
-
-    st.subheader('Histogramme de la variable comptage horaire')
-
-    fig = plt.figure(figsize=(10, 5))
-    sns.histplot(raw_data, x='Comptage horaire', kde=True)
-    plt.xlim(0, 2000)
-    st.pyplot(fig)
-
-    st.markdown("L'histogramme confirme le nombre élevé de valeurs inférieures à 100.")
-
-    st.subheader("QQ-Plot de la variable comptage horaire")
-    import statsmodels.api as sm
-
-    fig = sm.qqplot(df["Comptage horaire"], line = "r")
-    plt.title("QQ-Plot de Comptage horaire")
-    st.pyplot(fig)
-
-    st.markdown("""
-    On peut se rendre compte que la distribution de la variable n'est pas normale.
-    Ceci peut s'expliquer par le fait que les données soient concentrées vers 0.
-    """)
-
-    st.subheader('Boxplot de la variable comptage horaire en fonction du lieu de comptage') 
-
-    agg_data = get_lieux_compteurs_df(raw_data)
-    site = st.selectbox("Nom du site de comptage", list(agg_data['Nom du site de comptage'].unique()))
-    fig = plt.figure(figsize=(10, 5))
-    sns.boxplot(agg_data.loc[agg_data['Nom du site de comptage'] == site], x='Comptage horaire')
-    plt.title(site)
-    st.pyplot(fig)
-
     
     st.header("IV. Corrélation entre les variables")
     
