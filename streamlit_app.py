@@ -555,9 +555,9 @@ if page == pages[4]:
         st.plotly_chart(fig, use_container_width=True)
     
         residuals = y_test_exp - y_pred_exp
-        fig = px.histogram(residuals, nbins=50, 
+        fig = px.histogram(residuals, nbins=500, 
                            title='Distribution des Résidus',
-                           labels={'value': 'Résidu'})
+                           labels={'value': 'Résidu'}, range_x=(-200, 200))
         st.plotly_chart(fig, use_container_width=True)
 
 
