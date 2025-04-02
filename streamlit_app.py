@@ -17,14 +17,14 @@ MODELS_DIR = Path("models")
 
 @st.cache_data
 def load_raw_data():
-    df_2023 = pd.read_csv('data/raw/2023-comptage-velo-donnees-compteurs.csv', sep=';')
-    df_2024 = pd.read_csv('data/raw/2024-comptage-velo-donnees-compteurs.csv', sep=';') 
+    df_2023 = pd.read_csv(r"C:\Users\kevin_2crsr2j\Desktop\VELO DST\velo_2023.csv", sep=';')
+    df_2024 = pd.read_csv(r"C:\Users\kevin_2crsr2j\Desktop\VELO DST\velo_2024.csv", sep=';') 
     df = pd.concat([df_2023, df_2024], axis=0)
     df = fixNaN(df)
     return df
 
 # Charger les données
-df = pd.read_csv("data/processed/lieu-compteur-one-hot-encoded.csv", index_col=0)
+df = pd.read_csv(r"C:\Users\kevin_2crsr2j\Desktop\VELO DST\lieu-compteur-one-hot-encoded.csv", index_col=0)
 
 st.image("streamlit_assets/banniere6.jpeg", use_container_width=True)
 
