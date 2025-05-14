@@ -163,7 +163,11 @@ cython_debug/
 .vscode/
 
 # Data folder
-data/
+# Ignorer tout sauf les fichiers .dvc
+data/*
+!data/raw/
+data/raw/*
+!data/raw/*.dvc
 lieu-compteur-one-hot-encoded.csv
 comptage-velo-donnees-compteurs-2.csv
 lieu-compteur-one-hot-encoded.csv
@@ -172,3 +176,6 @@ lieu-compteur-one-hot-encoded.csv
 comptage-velo-donnees-compteurs-2.csv
 
 .DS_Store
+
+# Ne pas suivre les fichiers lourds, mais suivre les fichiers DVC
+!data/velo.csv.dvc
