@@ -9,3 +9,4 @@ seaborn==0.13.2
 plotly==6.0.1
 streamlit==1.45.1
 dvc==3.59.2
+mlflow
