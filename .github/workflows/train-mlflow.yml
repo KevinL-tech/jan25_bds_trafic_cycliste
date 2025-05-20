@@ -29,6 +29,12 @@ jobs:
           echo "DAGSHUB_USERNAME=${{ secrets.DAGSHUB_USERNAME }}" >> $GITHUB_ENV
           echo "DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }}" >> $GITHUB_ENV
 
+      - name: Install DVC
+        run: pip install dvc[http]
+
+      - name: Pull data with DVC
+        run: dvc pull
+
       - name: Train model and log to MLflow
         run: |
           python src/models/train_comptage_velo_MLflow.py
