@@ -25,5 +25,8 @@ scrape_configs:
     scrape_interval: 15s
     static_configs:
       - targets: ["node-exporter:9100"]
-
-  # TODO scrape datascientest service container
+    
+  - job_name: "trafic-cycliste-service"
+    scrape_interval: 15s
+    static_configs:
+      - targets: [ "trafic_cycliste_service:8000" ]
