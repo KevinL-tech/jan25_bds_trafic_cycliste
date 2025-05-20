@@ -1,14 +1,20 @@
-from pydantic import BaseModel
-from fastapi import FastAPI, HTTPException
+from pathlib import Path
+
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.ensemble import HistGradientBoostingRegressor
-from pathlib import Path
+from fastapi import FastAPI, HTTPException
+from prometheus_client import Summary
+from prometheus_fastapi_instrumentator import Instrumentator
+from pydantic import BaseModel
 
 app = FastAPI(title="Traffic Cycliste Prediction API",
               description="API for predicting bicycle traffic in Paris",
               version="1.0.0")
+
+# Prometheus instrumentation setup
+Instrumentator().instrument(app).expose(app)
+inference_time_summary = Summary('inference_time_seconds', 'Time taken for inference')
 
 MODELS_DIR = Path("models")
 MODEL_PATH = MODELS_DIR / "hgb_regressor_0.5_500.pkl"
@@ -41,6 +47,7 @@ def index():
 
 @app.post("/predict", response_model=PredictionResponse)
 def predict(input_parameters: ModelInputParameters):
+    """Endpoint for making predictions"""
     try:
         # Transform input into format expected by model
         x = pd.DataFrame([{
@@ -58,7 +65,8 @@ def predict(input_parameters: ModelInputParameters):
         X_p = encoder.transform(x)
 
         # Prediction
-        y_p = np.expm1(model.predict(X_p))
+        with inference_time_summary.time():
+            y_p = np.expm1(model.predict(X_p))
 
         return PredictionResponse(
             prediction=y_p,

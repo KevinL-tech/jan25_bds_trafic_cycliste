@@ -27,3 +27,9 @@ def test_predict():
 def test_predict_missing_data():
     r = requests.post(f"{API_URL}/predict", json={})
     assert r.status_code == 422
+
+def test_metrics():
+    r = requests.get(f"{API_URL}/metrics")
+    assert r.status_code == 200
+    assert "inference_time_seconds_count" in r.text
+
