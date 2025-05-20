@@ -7,7 +7,7 @@ on:
     branches: ["main"]
 
 jobs:
-  train-model:
+  train-and-test:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,8 +23,8 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
-      
-      - name: Set environment variables for DagsHub (from repository secrets)
+
+      - name: Set environment variables for DagsHub
         run: |
           echo "DAGSHUB_USERNAME=${{ secrets.DAGSHUB_USERNAME }}" >> $GITHUB_ENV
           echo "DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }}" >> $GITHUB_ENV
@@ -32,3 +32,26 @@ jobs:
       - name: Train model and log to MLflow
         run: |
           python src/models/train_comptage_velo_MLflow.py
+
+      - name: Build and run API
+        run: docker-compose up -d
+
+      - name: Wait for API to be ready
+        run: |
+          echo "Attente de l'API..."
+          for i in {1..10}; do
+            if curl -s http://localhost:8000/ | grep -q "Welcome"; then
+              echo "API disponible"
+              break
+            fi
+            echo "Nouvel essai dans 5s..."
+            sleep 5
+          done
+
+      - name: Run API tests
+        run: |
+          pip install pytest requests
+          pytest tests/api_test.py
+
+      - name: Stop Docker services
+        run: docker-compose down
