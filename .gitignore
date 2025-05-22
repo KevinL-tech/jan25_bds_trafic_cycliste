@@ -166,17 +166,10 @@ cython_debug/
 # Ignorer tout sauf les fichiers .dvc
 data/processed/*
 !data/processed/*.dvc
-!data/processed/lieu-compteur-one-hot-encoded.csv
 data/*
 !data/raw/
 data/raw/*
 !data/raw/*.dvc
-lieu-compteur-one-hot-encoded.csv
-comptage-velo-donnees-compteurs-2.csv
-lieu-compteur-one-hot-encoded.csv
-comptage-velo-donnees-compteurs-2.csv
-lieu-compteur-one-hot-encoded.csv
-comptage-velo-donnees-compteurs-2.csv
 
 .DS_Store
 
