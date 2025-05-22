@@ -31,6 +31,13 @@ jobs:
 
       - name: Install DVC
         run: pip install dvc[http]
+      
+      - name: Configure DVC remote
+        run: |
+          dvc remote add -f origin https://dagshub.com/KevinL-tech/jan25_bds_trafic_cycliste.dvc
+          dvc remote modify origin --local auth basic
+          dvc remote modify origin --local user ${{ secrets.DAGSHUB_USERNAME }}
+          dvc remote modify origin --local password ${{ secrets.DAGSHUB_TOKEN }}
 
       - name: Pull data with DVC
         run: dvc pull -r origin --verbose
