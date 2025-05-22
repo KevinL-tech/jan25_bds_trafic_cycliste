@@ -1,24 +1,4 @@
-<<<<<<< HEAD
-fastapi==0.115.12
-uvicorn==0.34.2
-numpy==2.2.0
-pandas==2.2.3
-scikit-learn==1.6.1
-joblib==1.5.0
-matplotlib==3.10.3
-seaborn==0.13.2
-plotly==6.0.1
-streamlit==1.45.1
-dvc==3.59.2
-mlflow
-python-dotenv
-prometheus-client==0.22.0
-prometheus_fastapi_instrumentator==7.1.0
-python-jose==3.4.0
-passlib==1.7.4
-python-multipart==0.0.20
-bcrypt==4.3.0
-=======
+
 # This file may be used to create an environment using:
 # $ conda create --name <env> --file <this file>
 # platform: osx-arm64
@@ -263,4 +243,3 @@ yaml=0.2.5=h1a28f6b_0
 zeromq=4.3.5=h313beb8_0
 zlib=1.2.13=h18a0788_1
 zstd=1.5.6=hfb09047_0
->>>>>>> upstream/main
