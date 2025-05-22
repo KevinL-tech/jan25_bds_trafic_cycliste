@@ -33,7 +33,7 @@ jobs:
         run: pip install dvc[http]
 
       - name: Pull data with DVC
-        run: dvc pull
+        run: dvc pull -r origin --verbose
 
       - name: Train model and log to MLflow
         run: |
