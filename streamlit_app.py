@@ -7,7 +7,11 @@ import seaborn as sns
 import joblib
 from pathlib import Path
 
+<<<<<<< HEAD
 from streamlit_utils.streamlit_utils import load_classification_data, load_regression_data, plotly_map, fixNaN, get_lieux_compteurs_df, train_classification_model, train_regression_model
+=======
+from src.streamlit_utils import load_classification_data, load_regression_data, plotly_map, fixNaN, get_lieux_compteurs_df, train_classification_model, train_regression_model
+>>>>>>> upstream/main
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.model_selection import train_test_split
 import plotly.express as px
@@ -40,7 +44,11 @@ _Projet réalisé par:_
 - _Alexandre COURROUX_
 - _Kévin LAKHDAR_
 - _Ketsia PEDRO_
+<<<<<<< HEAD
 - _Eliah REBSTOCK_
+=======
+- _Eliah REBSTOCK_ 
+>>>>>>> upstream/main
 
 _Bootcamp Machine Learning Engineer Décembre 2024_
 """)
@@ -169,9 +177,15 @@ La variable cible de notre modèle est donc le comptage horaire, un indicateur c
 Le dataset se distingue par sa précision horaire et sa couverture géographique dense, ce qui permet d’identifier des tendances temporelles comme les variations quotidiennes ou saisonnières du trafic cycliste.
 
 Cependant, il ne contient pas d’informations contextuelles telles que :
+<<<<<<< HEAD
 - La météo
 - La présence d’événements particuliers (manifestations, grèves, festivals)
 - Ou des données sociodémographiques comme la densité de population par zone
+=======
+- La météo 
+- La présence d’événements particuliers (manifestations, grèves, festivals) 
+- Ou des données sociodémographiques comme la densité de population par zone 
+>>>>>>> upstream/main
 
 Cette absence limite la profondeur des analyses prédictives que l’on peut mener.
 """)
@@ -184,6 +198,7 @@ if page == pages[2]:
     st.markdown("""
     Certaines variables de métadonnées des compteurs ("Identifiant du compteur", "Coordonnées géographiques", ...) ont des valeurs NaN (environ 3.4% sur le dataset).
 
+<<<<<<< HEAD
     Plusieurs compteurs du dataset correspondent en réalité à un même emplacement, ce qui a permis de réduire les NaN en les renommant et fusionnant.
 
     Les derniers NaN provenaient de deux compteurs atypiques, finalement supprimés pour obtenir un dataset complet et sans valeurs manquantes.
@@ -191,6 +206,15 @@ if page == pages[2]:
 
     st.header("2. Conversion Date au format datetime")
 
+=======
+    Plusieurs compteurs du dataset correspondent en réalité à un même emplacement, ce qui a permis de réduire les NaN en les renommant et fusionnant. 
+
+    Les derniers NaN provenaient de deux compteurs atypiques, finalement supprimés pour obtenir un dataset complet et sans valeurs manquantes.
+    """) 
+        
+    st.header("2. Conversion Date au format datetime") 
+                    
+>>>>>>> upstream/main
     st.markdown("""
     Variable "Date et heure de comptage" convertie au format datetime de Pandas, en utilisant le fuseau horaire Europe/Paris afin de correctement capturer les tendances journalières.
     """)
@@ -294,7 +318,11 @@ if page == pages[3]:
     Ceci peut s'expliquer par le fait que les données soient concentrées vers 0.
     """)
 
+<<<<<<< HEAD
     st.subheader('Boxplot de la variable comptage horaire en fonction du lieu de comptage')
+=======
+    st.subheader('Boxplot de la variable comptage horaire en fonction du lieu de comptage') 
+>>>>>>> upstream/main
 
     agg_data = get_lieux_compteurs_df(raw_data)
     site = st.selectbox("Nom du site de comptage", list(agg_data['Nom du site de comptage'].unique()))
@@ -309,6 +337,7 @@ if page == pages[3]:
 
     st.markdown("""
     Les compteurs sont répartis sur les axes principaux :
+<<<<<<< HEAD
 
     - Sud-Ouest / Nord-Est (avenue Denfert-Rochereau et boulevard Sébastopol)
     - Est-Ouest (avenue de la Grande Armée et avenue des Champs-Élysées).
@@ -318,6 +347,17 @@ if page == pages[3]:
 
     Les compteurs "centraux" ont plus de passages que ceux en périphérie de Paris : il y a donc une corrélation entre la localisation du compteur et le comptage horaire.""")
 
+=======
+            
+    - Sud-Ouest / Nord-Est (avenue Denfert-Rochereau et boulevard Sébastopol) 
+    - Est-Ouest (avenue de la Grande Armée et avenue des Champs-Élysées). 
+    - Les quais de la Seine ainsi que le boulevard périphérique Sud (le long de la voie de tram T3a) sont aussi couverts. 
+                
+    Le boulevard périphérique nord et les 17 et 18e arrondissements n'ont pas de compteurs.
+    
+    Les compteurs "centraux" ont plus de passages que ceux en périphérie de Paris : il y a donc une corrélation entre la localisation du compteur et le comptage horaire.""")
+
+>>>>>>> upstream/main
     st.header("III. Évolution temporelle")
 
     st.subheader("""a. Évolution globale du trafic""")
@@ -405,7 +445,11 @@ et la rentrée pour les étudiants.
 
     **Volume de passages** relativement **régulier** entre **11h et 20h** le **week-end**.
     """)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> upstream/main
     st.header("IV. Corrélation entre les variables")
 
     st.subheader("Matrice de corrélation entre les variables")
@@ -419,19 +463,33 @@ et la rentrée pour les étudiants.
     """)
 
 
+<<<<<<< HEAD
 # Modélisation
 if page == pages[4]:
     st.header("Modélisation", divider=True)
     problem_type = st.segmented_control("Type de problème", ["Classification", "Régression"])
 
+=======
+# Modélisation   
+if page == pages[4]: 
+    st.header("Modélisation", divider=True)
+    problem_type = st.segmented_control("Type de problème", ["Classification", "Régression"])
+    
+>>>>>>> upstream/main
     if problem_type == 'Classification':
         # Chargement des données
         class_df = load_classification_data()
         X = class_df.drop(columns=["Comptage horaire"])
         col_norm = ["Jour", "Mois", "Année", "Heure", "Jour_semaine", "Jour férié", "Vacances scolaires"]
+<<<<<<< HEAD
 
         # Encodage des features
         encoder = OneHotEncoder(sparse_output=False, dtype=int)
+=======
+        
+        # Encodage des features
+        encoder = OneHotEncoder(sparse_output=False, dtype=int) 
+>>>>>>> upstream/main
         array = encoder.fit_transform(X[col_norm])
         encoded_df_clean = pd.DataFrame(array, columns=encoder.get_feature_names_out(col_norm))
         encoded_df_clean.index = X.index
@@ -439,7 +497,11 @@ if page == pages[4]:
 
         # Encodage variable cible
         label_enc = LabelEncoder()
+<<<<<<< HEAD
         y = class_df["Comptage horaire"]
+=======
+        y = class_df["Comptage horaire"]  
+>>>>>>> upstream/main
         y = label_enc.fit_transform(y)
         X_train, X_test, y_train, y_test = train_test_split(X_clean, y, test_size=0.2, random_state=42)
 
@@ -452,10 +514,17 @@ if page == pages[4]:
             n_estimators = st.slider("n_estimators", 50, 200, 200, 50)
             max_depth = st.slider("max_depth", 10, 100, 70, 10)
             params = {'n_estimators': n_estimators, 'max_depth': max_depth, 'criterion': 'gini', 'min_samples_split':15, 'min_samples_leaf':2, 'max_features':'sqrt'}
+<<<<<<< HEAD
 
             # On génère un nom de fichier unique qui est basé sur les hyperparamètres
             model_filename = MODELS_DIR / f"rf_classifier_{n_estimators}_{max_depth}.pkl"
 
+=======
+            
+            # On génère un nom de fichier unique qui est basé sur les hyperparamètres
+            model_filename = MODELS_DIR / f"rf_classifier_{n_estimators}_{max_depth}.pkl"
+            
+>>>>>>> upstream/main
             # Ici on vérifie si le modèle est déjà entraîné
             if model_filename.exists():
                 st.info("Chargement du modèle pré-entraîné...")
@@ -466,26 +535,43 @@ if page == pages[4]:
                 model = train_classification_model(X_train, y_train, params)
                 joblib.dump(model, model_filename)
                 st.success("Modèle entraîné et sauvegardé pour une utilisation future !")
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> upstream/main
         # Prédictions et évaluation
         y_pred = model.predict(X_test)
 
         st.subheader("Performance du Modèle")
         st.dataframe(pd.DataFrame(classification_report(y_test, y_pred, target_names=label_enc.classes_, output_dict=True)).transpose())
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> upstream/main
         fig = px.imshow(confusion_matrix(y_test, y_pred),
                         labels=dict(x="Prédit", y="Réel", color="Count"),
                         x=label_enc.classes_, y=label_enc.classes_,
                         color_continuous_scale='Blues')
         fig.update_layout(title="Matrice de confusion")
         st.plotly_chart(fig, use_container_width=True)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> upstream/main
         feature_importance = pd.DataFrame({
             'feature': X_test.columns,
             'importance': model.feature_importances_
         }).sort_values('importance', ascending=False).head(10)
+<<<<<<< HEAD
 
         fig = px.bar(feature_importance, x='importance', y='feature',
+=======
+    
+        fig = px.bar(feature_importance, x='importance', y='feature', 
+>>>>>>> upstream/main
                      title='Top 10 des caractéristiques importantes')
         st.plotly_chart(fig, use_container_width=True)
 
@@ -494,9 +580,15 @@ if page == pages[4]:
         reg_df = load_regression_data()
         X = reg_df.drop(columns=["Comptage horaire"])
         col_norm = ["Jour", "Mois", "Année", "Heure", "Jour_semaine", "Jour férié", "Vacances scolaires"]
+<<<<<<< HEAD
 
         # Encodage des features
         encoder = OneHotEncoder(sparse_output=False, dtype=int)
+=======
+        
+        # Encodage des features
+        encoder = OneHotEncoder(sparse_output=False, dtype=int) 
+>>>>>>> upstream/main
         array = encoder.fit_transform(X[col_norm])
         encoded_df_clean = pd.DataFrame(array, columns=encoder.get_feature_names_out(col_norm))
         encoded_df_clean.index = X.index
@@ -509,13 +601,21 @@ if page == pages[4]:
         st.header("Analyse de Régression")
         st.write("""
         **Modèle choisi:** `HistGradientBoostingRegressor`
+<<<<<<< HEAD
 
+=======
+        
+>>>>>>> upstream/main
         **Note:** Une transformation logarithmique a été appliquée à la variable cible pour:
         - Réduire l'impact des valeurs extrêmes
         - Éviter les prédictions négatives
         - Normaliser la distribution des données
         """)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> upstream/main
         with st.expander("Hyperparamètres de Régression", expanded=True):
             learning_rate = st.slider("Taux d'apprentissage", 0.1, 0.5, 0.5, 0.1)
             max_iter = st.slider("Nombre d'itérations", 50, 500, 500, 50)
@@ -535,34 +635,57 @@ if page == pages[4]:
                 st.success("Modèle entraîné et sauvegardé pour une utilisation future !")
 
         y_pred = model.predict(X_test)
+<<<<<<< HEAD
 
         # Conversion inverse des prédictions (expm1 pour inverser log1p)
         y_test_exp = np.expm1(y_test)
         y_pred_exp = np.expm1(y_pred)
 
+=======
+        
+        # Conversion inverse des prédictions (expm1 pour inverser log1p)
+        y_test_exp = np.expm1(y_test)
+        y_pred_exp = np.expm1(y_pred)
+    
+>>>>>>> upstream/main
         st.subheader("Performance du Modèle")
         col1, col2, col3 = st.columns(3)
         col1.metric("RMSE", f"{np.sqrt(mean_squared_error(y_test_exp, y_pred_exp)):.2f}")
         col2.metric("R²", f"{r2_score(y_test_exp, y_pred_exp):.2f}")
         col3.metric("MAE", f"{mean_absolute_error(y_test_exp, y_pred_exp):.2f}")
+<<<<<<< HEAD
 
         fig = px.scatter(x=y_test_exp, y=y_pred_exp,
+=======
+    
+        fig = px.scatter(x=y_test_exp, y=y_pred_exp, 
+>>>>>>> upstream/main
                          labels={'x': 'Valeurs Réelles', 'y': 'Prédictions'},
                          title='Valeurs Réelles vs Prédictions (échelle originale)')
         fig.add_shape(type='line', line=dict(dash='dash'),
                       x0=min(y_test_exp), y0=min(y_test_exp),
                       x1=max(y_test_exp), y1=max(y_test_exp))
         st.plotly_chart(fig, use_container_width=True)
+<<<<<<< HEAD
 
         residuals = y_test_exp - y_pred_exp
         fig = px.histogram(residuals, nbins=500,
+=======
+    
+        residuals = y_test_exp - y_pred_exp
+        fig = px.histogram(residuals, nbins=500, 
+>>>>>>> upstream/main
                            title='Distribution des Résidus',
                            labels={'value': 'Résidu'}, range_x=(-200, 200))
         st.plotly_chart(fig, use_container_width=True)
 
 
 ## Interprétation et résultats
+<<<<<<< HEAD
 if page == pages[5]:
+=======
+if page == pages[5]: 
+>>>>>>> upstream/main
     st.header("Interprétation et résultats", divider=True)
     st.header("Analyse comparative des erreurs")
 
@@ -616,6 +739,7 @@ un compteur à une heure précise.
     """)
 
 ## Conclusion
+<<<<<<< HEAD
 if page == pages[6]:
     st.header("Synthèse du Projet", divider=True)
 
@@ -624,6 +748,16 @@ if page == pages[6]:
     L'objectif principal était de développer un modèle capable d'estimer avec précision le nombre de vélos circulant
     sur les axes cyclables parisiens, afin d'aider la ville dans sa politique d'aménagement urbain.
 
+=======
+if page == pages[6]: 
+    st.header("Synthèse du Projet", divider=True)
+
+    st.markdown("""
+    Ce projet de data science vise à **prédire le trafic cycliste à Paris** à l'aide des données ouverte de comptage horaire. 
+    L'objectif principal était de développer un modèle capable d'estimer avec précision le nombre de vélos circulant 
+    sur les axes cyclables parisiens, afin d'aider la ville dans sa politique d'aménagement urbain.
+    
+>>>>>>> upstream/main
     **Principales réalisations :**
 
     - Collecte et traitement de **1,8 million d'observations** (2023-2025)
@@ -638,7 +772,11 @@ if page == pages[6]:
 
     st.header("Principaux Enseignements")
     col1, col2 = st.columns(2)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> upstream/main
     with col1:
         st.subheader("📈 Insights Clés")
         st.markdown("""
@@ -647,7 +785,11 @@ if page == pages[6]:
         - Impact visible des **vacances scolaires** et jours fériés.
         - Différences marquées selon les **localisations géographiques**.
         """)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> upstream/main
     with col2:
         st.subheader("⚙️ Performance des Modèles")
         st.markdown("""
@@ -668,7 +810,11 @@ if page == pages[6]:
     - Optimisation des **aménagements cyclables**
     - Meilleure gestion des **flux aux heures de pointe**
     - Aide à la décision pour les **investissements infrastructurels**
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> upstream/main
     🔹 **Pour les Citoyens :**
 
     - Application potentielle pour **éviter les axes saturés**
@@ -684,7 +830,11 @@ if page == pages[6]:
     - Intégration de données **météorologiques**
     - Ajout d'informations sur les **événements locaux**
     - Utilisation de techniques avancées (deep learning, modèles séquentiels)
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> upstream/main
     🌍 **Extensions Possibles:**
 
     - Prédiction à l'échelle de la **semaine/mois**
@@ -697,8 +847,16 @@ if page == pages[6]:
     st.markdown("""
     <div style="background-color:#f0f2f6; padding:20px; border-radius:10px;">
     <h3 style="color:#1e88e5;">En résumé</h3>
+<<<<<<< HEAD
     <p>Ce projet démontre la valeur des données de mobilité pour la gestion urbaine.
     Les résultats obtenus ouvrent des perspectives intéressantes pour une ville comme Paris
     qui souhaite développer les mobilités douces tout en optimisant ses infrastructures existantes.</p>
     </div>
     """, unsafe_allow_html=True)
+=======
+    <p>Ce projet démontre la valeur des données de mobilité pour la gestion urbaine. 
+    Les résultats obtenus ouvrent des perspectives intéressantes pour une ville comme Paris 
+    qui souhaite développer les mobilités douces tout en optimisant ses infrastructures existantes.</p>
+    </div>
+    """, unsafe_allow_html=True)
+>>>>>>> upstream/main

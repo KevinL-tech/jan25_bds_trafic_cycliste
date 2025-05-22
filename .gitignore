@@ -164,12 +164,29 @@ cython_debug/
 
 # Data folder
 # Ignorer tout sauf les fichiers .dvc
+<<<<<<< HEAD
 data/raw/*
 !data/raw/*.dvc
 data/processed/*
 !data/processed/*.dvc
+=======
+data/*
+!data/raw/
+data/raw/*
+!data/raw/*.dvc
+lieu-compteur-one-hot-encoded.csv
+comptage-velo-donnees-compteurs-2.csv
+lieu-compteur-one-hot-encoded.csv
+comptage-velo-donnees-compteurs-2.csv
+lieu-compteur-one-hot-encoded.csv
+comptage-velo-donnees-compteurs-2.csv
+>>>>>>> upstream/main
 
 .DS_Store
 
 # Ne pas suivre les fichiers lourds, mais suivre les fichiers DVC
+<<<<<<< HEAD
 !data/velo.csv.dvc
+=======
+!data/velo.csv.dvc
+>>>>>>> upstream/main
