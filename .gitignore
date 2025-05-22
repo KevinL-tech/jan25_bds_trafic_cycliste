@@ -166,6 +166,7 @@ cython_debug/
 # Ignorer tout sauf les fichiers .dvc
 data/processed/*
 !data/processed/*.dvc
+!data/processed/lieu-compteur-one-hot-encoded.csv
 data/*
 !data/raw/
 data/raw/*
