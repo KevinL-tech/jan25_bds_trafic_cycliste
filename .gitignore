@@ -164,12 +164,11 @@ cython_debug/
 
 # Data folder
 # Ignorer tout sauf les fichiers .dvc
-data/processed/*
-!data/processed/*.dvc
 data/*
 !data/raw/
-data/raw/*
 !data/raw/*.dvc
+!data/processed/
+!data/processed/*.dvc
 
 .DS_Store
 
