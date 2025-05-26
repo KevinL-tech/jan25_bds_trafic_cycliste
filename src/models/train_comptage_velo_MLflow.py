@@ -7,7 +7,7 @@ import numpy as np
 from pathlib import Path
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import mean_squared_error
+from sklearn.metrics import mean_squared_error, r2_score
 from dotenv import load_dotenv
 
 # Charger les identifiants DagsHub depuis le fichier .env
