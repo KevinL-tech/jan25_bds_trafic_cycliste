@@ -72,5 +72,14 @@ jobs:
           pip install pytest requests
           pytest tests/api_test.py
 
+      - name: Build Docker image
+        run: docker build -t kevinltech/jan25_bds_trafic_cycliste:latest .
+
+      - name: Log in to Docker Hub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      - name: Push Docker image to Docker Hub
+        run: docker push kevinltech/jan25_bds_trafic_cycliste:latest
+
       - name: Stop Docker services
         run: docker-compose down
