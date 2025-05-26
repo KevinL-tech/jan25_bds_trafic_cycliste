@@ -32,7 +32,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Paramètres du modèle
-params = {"learning_rate": 0.1, "max_iter": 5000}
+params = {"learning_rate": 0.5, "max_iter": 500}
 model = HistGradientBoostingRegressor(**params)
 
 # Dossier de sauvegarde
@@ -44,15 +44,18 @@ with mlflow.start_run(run_name="HGB_notebook_style"):
     mlflow.log_params(params)
     mlflow.set_tags({
         "modele": "HistGradientBoosting",
-        "données": "one-hot encoded CSV",
-        "objectif": "comptage horaire"
+        "données": "lieu-compteur-one-hot-encoded CSV",
+        "objectif": "comptage horaire vélo par compteurs"
     })
 
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    r2 = r2_score(y_test, y_pred)
+
 
     mlflow.log_metric("rmse", rmse)
+    mlflow.log_metric("r2_score", r2)
     mlflow.sklearn.log_model(model, "model")
 
-    print(f"Modèle entraîné avec RMSE={rmse:.4f}")
+    print(f"Modèle entraîné avec RMSE={rmse:.4f} et R²={r2:.4f}")
