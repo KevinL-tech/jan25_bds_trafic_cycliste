@@ -12,6 +12,11 @@ Pour lancer le streamlit:
 streamlit run streamlit_app.py
 ```
 
+Diagramme d'architecture du projet
+----------------------------------
+
+![Diagramme d'architecture du projet MLOps](./diagramme-archi-mlops.png)
+
 Service FastAPI et Docker Compose
 ---------------------------------
 
