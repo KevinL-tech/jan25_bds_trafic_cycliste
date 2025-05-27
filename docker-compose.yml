@@ -1,6 +1,6 @@
 services:
   trafic_cycliste_service:
-    build: .
+    image: ghcr.io/kevinl-tech/jan25_bds_trafic_cycliste:main
     ports:
       - 8000:8000
 
