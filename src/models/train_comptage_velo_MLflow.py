@@ -60,3 +60,7 @@ with mlflow.start_run(run_name="HGB_notebook_style"):
     mlflow.sklearn.log_model(model, "model")
 
     print(f"Modèle entraîné avec RMSE={rmse:.4f} et R²={r2:.4f}")
+
+# Enregistrement dans le Model Registry
+model_uri = "runs:/{}/model".format(mlflow.active_run().info.run_id)
+mlflow.register_model(model_uri, "comptage_velo_horaire")
