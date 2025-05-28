@@ -39,7 +39,7 @@ MODELS_DIR = Path("models")
 model_filename = MODELS_DIR / f"hgb_regressor_{params['learning_rate']}_{params['max_iter']}.pkl"
 
 # Tracking MLflow
-with mlflow.start_run(run_name="HGB_notebook_style"):
+with mlflow.start_run(run_name="HGB_notebook_style") as run :
     mlflow.log_params(params)
     mlflow.set_tags({
         "modele": "HistGradientBoosting",
