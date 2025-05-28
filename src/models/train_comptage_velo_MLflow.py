@@ -1,14 +1,12 @@
 
 import os
 import mlflow
-import mlflow.sklearn
 import pandas as pd
 import numpy as np
 from pathlib import Path
 from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
-from dotenv import load_dotenv
 
 # Charger les identifiants DagsHub depuis le fichier .env
 
@@ -55,9 +53,9 @@ with mlflow.start_run(run_name="HGB_notebook_style"):
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
 
-#Sauvegarde du scoring dans MLflow
+#Sauvegarde du scoring et du modèle dans MLflow
     mlflow.log_metric("rmse", rmse)
     mlflow.log_metric("r2_score", r2)
-    mlflow.sklearn.log_model(model, "model")
+    mlflow.log_model(model, "model")
 
     print(f"Modèle entraîné avec RMSE={rmse:.4f} et R²={r2:.4f}")
