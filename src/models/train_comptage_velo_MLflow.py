@@ -1,6 +1,4 @@
-
 import os
-import argparse
 import mlflow
 import mlflow.sklearn
 import pandas as pd
@@ -10,37 +8,37 @@ from sklearn.ensemble import HistGradientBoostingRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, r2_score
 
-# Argument parser pour MLproject
-parser = argparse.ArgumentParser()
-parser.add_argument("--learning_rate", type=float, default=0.5)
-parser.add_argument("--max_iter", type=int, default=500)
-args = parser.parse_args()
+# Charger les identifiants DagsHub depuis le fichier .env
 
-params = {
-    "learning_rate": args.learning_rate,
-    "max_iter": args.max_iter,
-    "random_state": 42
-}
+os.environ["MLFLOW_TRACKING_USERNAME"] = os.environ["DAGSHUB_USERNAME"]
+os.environ["MLFLOW_TRACKING_PASSWORD"] = os.environ["DAGSHUB_TOKEN"]
 
-# Authentification pour MLflow (env déjà injecté via GitHub Actions)
-os.environ["MLFLOW_TRACKING_USERNAME"] = os.environ["MLFLOW_TRACKING_USERNAME"]
-os.environ["MLFLOW_TRACKING_PASSWORD"] = os.environ["MLFLOW_TRACKING_PASSWORD"]
-
-# Configuration du tracking
+# MLflow tracking sur DagsHub
 mlflow.set_tracking_uri("https://dagshub.com/KevinL-tech/jan25_bds_trafic_cycliste.mlflow")
 mlflow.set_experiment("modele_comptage_velo")
 
-# Chargement des données
+# Charger les données encodées
 df = pd.read_csv('data/processed/lieu-compteur-one-hot-encoded.csv', index_col=0)
+
+# Transformation log1p pour lisser la cible
 y = np.log1p(df["Comptage horaire"])
 X = df.drop(columns=["Comptage horaire"])
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-# Modèle
+# Split train/test
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+# Paramètres du modèle
+params = {"learning_rate": 0.5, "max_iter": 500, "random_state" : 42}
 model = HistGradientBoostingRegressor(**params)
 
+# Dossier de sauvegarde
+MODELS_DIR = Path("models")
+model_filename = MODELS_DIR / f"hgb_regressor_{params['learning_rate']}_{params['max_iter']}.pkl"
+
 # Tracking MLflow
-with mlflow.start_run(run_name="HGB_notebook_style") as run:
+with mlflow.start_run(run_name="HGB_notebook_style") as run :
     mlflow.log_params(params)
     mlflow.set_tags({
         "modele": "HistGradientBoosting",
@@ -48,19 +46,20 @@ with mlflow.start_run(run_name="HGB_notebook_style") as run:
         "objectif": "comptage horaire vélo par compteurs"
     })
 
+    
+#Entraînement, prédiction et scoring du modèle  
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
 
+#Sauvegarde du scoring et du modèle
     mlflow.log_metric("rmse", rmse)
     mlflow.log_metric("r2_score", r2)
-
-    # Signature pour éviter le warning
-    example_input = X_test.iloc[:1]
-    mlflow.sklearn.log_model(model, "model", input_example=example_input)
+    mlflow.sklearn.log_model(model, "model")
 
     print(f"Modèle entraîné avec RMSE={rmse:.4f} et R²={r2:.4f}")
 
-    model_uri = f"runs:/{run.info.run_id}/model"
-    mlflow.register_model(model_uri, "comptage_velo_horaire")
+# Enregistrement dans le Model Registry
+model_uri = f"runs:/{run.info.run_id}/model"
+mlflow.register_model(model_uri, "comptage_velo_horaire")
