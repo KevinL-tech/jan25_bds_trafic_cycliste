@@ -11,9 +11,9 @@ from sklearn.metrics import mean_squared_error, r2_score
 from dotenv import load_dotenv
 
 # Charger les identifiants DagsHub depuis le fichier .env
-load_dotenv()
-os.environ["MLFLOW_TRACKING_USERNAME"] = os.getenv("DAGSHUB_USERNAME")
-os.environ["MLFLOW_TRACKING_PASSWORD"] = os.getenv("DAGSHUB_TOKEN")
+
+os.environ["MLFLOW_TRACKING_USERNAME"] = os.environ["DAGSHUB_USERNAME"]
+os.environ["MLFLOW_TRACKING_PASSWORD"] = os.environ["DAGSHUB_TOKEN"]
 
 # MLflow tracking sur DagsHub
 mlflow.set_tracking_uri("https://dagshub.com/KevinL-tech/jan25_bds_trafic_cycliste.mlflow")
@@ -32,7 +32,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Paramètres du modèle
-params = {"learning_rate": 0.5, "max_iter": 500}
+params = {"learning_rate": 0.5, "max_iter": 500, "random_state" : 42}
 model = HistGradientBoostingRegressor(**params)
 
 # Dossier de sauvegarde
@@ -50,8 +50,12 @@ with mlflow.start_run(run_name="HGB_notebook_style"):
 
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
-    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
-    r2 = r2_score(y_test, y_pred)
+    y_pred_final = np.expm1(y_pred)
+    y_test_final = np.expm1(y_test)
+    y_pred_final = np.maximum(y_pred_final, 0)
+    y_pred_final = np.round(y_pred_final)
+    rmse = np.sqrt(mean_squared_error(y_test_final, y_pred_final))
+    r2 = r2_score(y_test_final, y_pred_final)
 
 
     mlflow.log_metric("rmse", rmse)
