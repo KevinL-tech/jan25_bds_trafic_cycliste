@@ -23,15 +23,16 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install -r requirements.txt
+          pip install mlflow
 
       - name: Set environment variables for DagsHub
         run: |
-          echo "DAGSHUB_USERNAME=${{ secrets.DAGSHUB_USERNAME }}" >> $GITHUB_ENV
-          echo "DAGSHUB_TOKEN=${{ secrets.DAGSHUB_TOKEN }}" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_USERNAME=${{ secrets.DAGSHUB_USERNAME }}" >> $GITHUB_ENV
+          echo "MLFLOW_TRACKING_PASSWORD=${{ secrets.DAGSHUB_TOKEN }}" >> $GITHUB_ENV
 
       - name: Install DVC
         run: pip install dvc[http]
-      
+
       - name: Configure DVC remote
         run: |
           dvc remote add -f origin https://dagshub.com/KevinL-tech/jan25_bds_trafic_cycliste.dvc
@@ -42,9 +43,9 @@ jobs:
       - name: Pull data with DVC
         run: dvc pull -r origin --verbose
 
-      - name: Train model and log to MLflow
+      - name: Run MLflow Project (train model)
         run: |
-          python src/models/train_comptage_velo_MLflow.py
+          mlflow run . --env-manager=local -P learning_rate=0.5 -P max_iter=500
 
       - name: Install Docker Compose
         run: |
