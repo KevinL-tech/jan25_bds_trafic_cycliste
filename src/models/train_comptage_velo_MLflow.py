@@ -32,7 +32,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Paramètres du modèle
-params = {"learning_rate": 0.1, "max_iter": 5000, "random_state" : 42}
+params = {"learning_rate": 0.5, "max_iter": 500, "random_state" : 42}
 model = HistGradientBoostingRegressor(**params)
 
 # Dossier de sauvegarde
@@ -48,16 +48,14 @@ with mlflow.start_run(run_name="HGB_notebook_style"):
         "objectif": "comptage horaire vélo par compteurs"
     })
 
+    
+#Entraînement, prédiction et scoring du modèle  
     model.fit(X_train, y_train)
     y_pred = model.predict(X_test)
-    y_pred_final = np.expm1(y_pred)
-    y_test_final = np.expm1(y_test)
-    y_pred_final = np.maximum(y_pred_final, 0)
-    y_pred_final = np.round(y_pred_final)
-    rmse = np.sqrt(mean_squared_error(y_test_final, y_pred_final))
-    r2 = r2_score(y_test_final, y_pred_final)
+    rmse = np.sqrt(mean_squared_error(y_test, y_pred))
+    r2 = r2_score(y_test, y_pred)
 
-
+#Sauvegarde du scoring dans MLflow
     mlflow.log_metric("rmse", rmse)
     mlflow.log_metric("r2_score", r2)
     mlflow.sklearn.log_model(model, "model")
