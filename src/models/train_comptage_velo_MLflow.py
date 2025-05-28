@@ -32,7 +32,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 # Paramètres du modèle
-params = {"learning_rate": 0.5, "max_iter": 500, "random_state" : 42}
+params = {"learning_rate": 0.1, "max_iter": 5000, "random_state" : 42}
 model = HistGradientBoostingRegressor(**params)
 
 # Dossier de sauvegarde
