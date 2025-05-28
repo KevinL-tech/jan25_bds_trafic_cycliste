@@ -1,6 +1,7 @@
 
 import os
 import mlflow
+import mlflow.sklearn
 import pandas as pd
 import numpy as np
 from pathlib import Path
@@ -53,9 +54,9 @@ with mlflow.start_run(run_name="HGB_notebook_style"):
     rmse = np.sqrt(mean_squared_error(y_test, y_pred))
     r2 = r2_score(y_test, y_pred)
 
-#Sauvegarde du scoring et du modèle dans MLflow
+#Sauvegarde du scoring et du modèle
     mlflow.log_metric("rmse", rmse)
     mlflow.log_metric("r2_score", r2)
-    mlflow.log_model(model, "model")
+    mlflow.sklearn.log_model(model, "model")
 
     print(f"Modèle entraîné avec RMSE={rmse:.4f} et R²={r2:.4f}")
